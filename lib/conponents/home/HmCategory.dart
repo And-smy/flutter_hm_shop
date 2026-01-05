@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hm_shop/viewmodels/category.dart';
+import 'package:hm_shop/viewmodels/home.dart';
 
 class HmCategory extends StatefulWidget {
-  List<CategoryItem> categoryList;
+  final List<CategoryItem> categoryList;
   HmCategory({required this.categoryList, Key? key}) : super(key: key);
 
   @override

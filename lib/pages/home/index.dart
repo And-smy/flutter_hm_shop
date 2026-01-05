@@ -6,8 +6,8 @@ import 'package:hm_shop/conponents/home/HmSlider.dart';
 import 'package:hm_shop/conponents/home/HmSuggestion.dart';
 import 'package:hm_shop/constants/index.dart';
 import 'package:hm_shop/utils/dio_request.dart';
-import 'package:hm_shop/viewmodels/category.dart';
-import 'package:hm_shop/viewmodels/home.dart';
+import 'package:hm_shop/viewmodels/home.dart' show CategoryItem, BannerItem, SpecialRecommendResult;
+
 
 class HomeView extends StatefulWidget {
   HomeView({Key? key}) : super(key: key);
@@ -30,7 +30,7 @@ class _HomeViewState extends State<HomeView> {
             ))
             as List)
         .map((item) {
-          return BannerItem(id: item["id"], imgUrl: item["imgUrl"]);
+          return BannerItem.fromJson(item);
         })
         .toList();
   }
@@ -41,70 +41,18 @@ class _HomeViewState extends State<HomeView> {
             )
             as List)
         .map((item) {
-          return CategoryItem(
-            id: item["id"],
-            name: item["name"],
-            imgUrl: item["picture"],
-          );
+          return CategoryItem.fromJson(item);
         })
         .toList();
   }
 
   Future<SpecialRecommendResult> _getSpecialRecommendResultAPI() async {
-    Map<String, dynamic> specialRecommendResultMap =
+    Map<String, dynamic> resultMap =
         (await diorequest.get(
               GlobalConstants.BASE_URL + HttpConstants.PRODUCT_LIST,
             ))
             as Map<String, dynamic>;
-    List<dynamic> subTypesList =
-        specialRecommendResultMap["subTypes"] as List<dynamic>;
-
-    List<SubType> subTypes = [];
-    for (dynamic subItem in subTypesList) {
-      String id = subItem["id"];
-      String title = subItem["title"] ?? "";
-      Map<String, dynamic> goodItemsMap =
-          subItem["goodsItems"] as Map<String, dynamic>;
-      int counts = goodItemsMap["counts"] as int;
-      int pageSize = goodItemsMap["pageSize"] as int;
-      int pages = goodItemsMap["pages"] as int;
-      int page = goodItemsMap["page"] as int;
-      List<dynamic> itemsList = goodItemsMap["items"] as List<dynamic>;
-      List<GoodsItem> goodItems = [];
-      for (var item in itemsList) {
-        String itemId = item["id"] as String;
-        String itemName = item["name"] ?? "";
-        String itemDesc = item["desc"] ?? "";
-        String itemPrice = item["price"] ?? "";
-        String itemPicture = item["picture"] ?? "";
-        int itemOrderNum = item["orderNum"] as int;
-        goodItems.add(
-          GoodsItem(
-            id: itemId,
-            name: itemName,
-            desc: itemDesc,
-            price: itemPrice,
-            picture: itemPicture,
-            orderNum: itemOrderNum,
-          ),
-        );
-      }
-      GoodsItems goodItem = GoodsItems(
-        counts: counts,
-        pageSize: pageSize,
-        pages: pages,
-        page: page,
-        items: goodItems,
-      );
-
-      subTypes.add(SubType(id: id, title: title, goodsItems: goodItem));
-    }
-
-    return SpecialRecommendResult(
-      id: specialRecommendResultMap["id"] as String,
-      title: specialRecommendResultMap["title"] as String,
-      subTypes: subTypes,
-    );
+    return SpecialRecommendResult.fromJson(resultMap);
   }
 
   @override

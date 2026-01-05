@@ -1,7 +1,29 @@
+class CategoryItem {
+  String id;
+  String name;
+  String imgUrl;
+
+  CategoryItem({required this.id, required this.imgUrl, required this.name});
+
+  factory CategoryItem.fromJson(Map<String, dynamic> json) {
+    return CategoryItem(
+      id: json['id'],
+      name: json['name'],
+      imgUrl: json['picture'],
+    );
+  }
+}
+
 class BannerItem {
   String id;
   String imgUrl;
   BannerItem({required this.id, required this.imgUrl});
+  factory BannerItem.fromJson(Map<String, dynamic> json) {
+    return BannerItem(
+      id: json['id'],
+      imgUrl: json['imgUrl'],
+    );
+  }
 }
 
 // 商品信息
@@ -21,6 +43,16 @@ class GoodsItem {
     required this.picture,
     required this.orderNum,
   });
+  factory GoodsItem.fromJson(Map<String, dynamic> json) {
+    return GoodsItem(
+      id: json['id'],
+      name: json['name'],
+      desc: json['desc'],
+      price: json['price'],
+      picture: json['picture'],
+      orderNum: json['orderNum'],
+    );
+  }
 }
 
 // 商品列表信息
@@ -38,6 +70,17 @@ class GoodsItems {
     required this.page,
     required this.items,
   });
+  factory GoodsItems.fromJson(Map<String, dynamic> json) {
+    return GoodsItems(
+      counts: json['counts'],
+      pageSize: json['pageSize'],
+      pages: json['pages'],
+      page: json['page'],
+      items: (json['items'] as List<dynamic>)
+          .map((item) => GoodsItem.fromJson(item))
+          .toList(),
+    );
+  }
 }
 
 // 子类型信息
@@ -47,6 +90,13 @@ class SubType {
   final GoodsItems goodsItems;
 
   SubType({required this.id, required this.title, required this.goodsItems});
+  factory SubType.fromJson(Map<String, dynamic> json) {
+    return SubType(
+      id: json['id'],
+      title: json['title'],
+      goodsItems: GoodsItems.fromJson(json['goodsItems']),
+    );
+  }
 }
 
 // 热门推荐结果
@@ -60,4 +110,13 @@ class SpecialRecommendResult {
     required this.title,
     required this.subTypes,
   });
+  factory SpecialRecommendResult.fromJson(Map<String, dynamic> json) {
+    return SpecialRecommendResult(
+      id: json['id'],
+      title: json['title'],
+      subTypes: (json['subTypes'] as List<dynamic>)
+          .map((item) => SubType.fromJson(item))
+          .toList(),
+    );
+  }
 }
