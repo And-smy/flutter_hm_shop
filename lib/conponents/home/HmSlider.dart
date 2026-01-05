@@ -52,10 +52,11 @@ class _HmSliderState extends State<HmSlider> {
             color: const Color.fromRGBO(0, 0, 0, 0.4),
             borderRadius: BorderRadius.circular(25),
           ),
-          // child: Text(
-          //   "搜索...",
-          //   style: TextStyle(color: Colors.green, fontSize: 80,backgroundColor: Colors.black),
-          // ),
+          padding:EdgeInsets.only(left: 20) ,
+          child: Text(
+            "搜索...",
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
         ),
       ),
     );
