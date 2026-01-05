@@ -6,8 +6,8 @@ import 'package:hm_shop/conponents/home/HmSlider.dart';
 import 'package:hm_shop/conponents/home/HmSuggestion.dart';
 import 'package:hm_shop/constants/index.dart';
 import 'package:hm_shop/utils/dio_request.dart';
-import 'package:hm_shop/viewmodels/home.dart' show CategoryItem, BannerItem, SpecialRecommendResult;
-
+import 'package:hm_shop/viewmodels/home.dart'
+    show CategoryItem, BannerItem, SpecialRecommendResult;
 
 class HomeView extends StatefulWidget {
   HomeView({Key? key}) : super(key: key);
@@ -20,6 +20,16 @@ class _HomeViewState extends State<HomeView> {
   List<BannerItem> _bannerList = [];
   List<CategoryItem> _categoryList = [];
   SpecialRecommendResult _specialRecommendResult = SpecialRecommendResult(
+    id: "",
+    title: "",
+    subTypes: [],
+  );
+  SpecialRecommendResult _invogueList = SpecialRecommendResult(
+    id: "",
+    title: "",
+    subTypes: [],
+  );
+  SpecialRecommendResult _oneStepList = SpecialRecommendResult(
     id: "",
     title: "",
     subTypes: [],
@@ -55,6 +65,24 @@ class _HomeViewState extends State<HomeView> {
     return SpecialRecommendResult.fromJson(resultMap);
   }
 
+  Future<SpecialRecommendResult> _getInvogueListAPI() async {
+    return SpecialRecommendResult.fromJson(
+      (await diorequest.get(
+            GlobalConstants.BASE_URL + HttpConstants.INVOGUE_LIST,
+          ))
+          as Map<String, dynamic>,
+    );
+  }
+
+  Future<SpecialRecommendResult> _getOneStepAPI() async {
+    return SpecialRecommendResult.fromJson(
+      (await diorequest.get(
+            GlobalConstants.BASE_URL + HttpConstants.ONE_STOP_LIST,
+          ))
+          as Map<String, dynamic>,
+    );
+  }
+
   @override
   void initState() {
     _loadData();
@@ -65,6 +93,8 @@ class _HomeViewState extends State<HomeView> {
     _bannerList = await _getBannerListAPI();
     _categoryList = await _getCategoryListAPI();
     _specialRecommendResult = await _getSpecialRecommendResultAPI();
+    _invogueList = await _getInvogueListAPI();
+    _oneStepList = await _getOneStepAPI();
     setState(() {});
   }
 
@@ -89,9 +119,13 @@ class _HomeViewState extends State<HomeView> {
           child: Flex(
             direction: Axis.horizontal,
             children: [
-              Expanded(child: HmHot()),
+              Expanded(
+                child: HmHot(result: _invogueList, type: "hot"),
+              ),
               SizedBox(width: 10),
-              Expanded(child: HmHot()),
+              Expanded(
+                child: HmHot(result: _oneStepList, type: "step"),
+              ),
             ],
           ),
         ),
