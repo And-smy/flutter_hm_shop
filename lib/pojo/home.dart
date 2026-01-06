@@ -120,3 +120,27 @@ class SpecialRecommendResult {
     );
   }
 }
+
+class ShopItem {
+  final String id;
+  final String name;
+  final double price;
+  final String picture;
+  final int payCount;
+  ShopItem({
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.picture,
+    required this.payCount
+  });
+  factory ShopItem.fromJson(Map<String, dynamic> json) {
+    return ShopItem(
+      id: json['id'],
+      name: json['name'],
+      price: json['price'],
+      picture: json['picture'],
+      payCount: json['payCount'],
+    );
+  }
+}

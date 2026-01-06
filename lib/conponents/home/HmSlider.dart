@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:hm_shop/viewmodels/home.dart';
+import 'package:hm_shop/pojo/home.dart';
 
 class HmSlider extends StatefulWidget {
   final List<BannerItem> bannerList;
@@ -21,6 +21,12 @@ class _HmSliderState extends State<HmSlider> {
       items: List.generate(widget.bannerList.length, (int index) {
         return Image.network(
           widget.bannerList[index].imgUrl,
+          errorBuilder: (context, error, stackTrace) {
+            return Image.asset(
+              "lib/assets/home_cmd_inner.png",
+              fit: BoxFit.cover,
+            );
+          },
           fit: BoxFit.cover,
           width: screenWidth,
         );
@@ -52,7 +58,7 @@ class _HmSliderState extends State<HmSlider> {
             color: const Color.fromRGBO(0, 0, 0, 0.4),
             borderRadius: BorderRadius.circular(25),
           ),
-          padding:EdgeInsets.only(left: 20) ,
+          padding: EdgeInsets.only(left: 20),
           child: Text(
             "搜索...",
             style: TextStyle(color: Colors.white, fontSize: 16),

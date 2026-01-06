@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hm_shop/viewmodels/home.dart';
+import 'package:hm_shop/pojo/home.dart';
 
 class HmSuggestion extends StatefulWidget {
   HmSuggestion({Key? key, required this.specialRecommendResult})
@@ -52,13 +52,9 @@ class _HmSuggestionState extends State<HmSuggestion> {
     if (widget.specialRecommendResult.subTypes.isEmpty) {
       return [];
     }
-    List<GoodsItem> goodsItems =
-        widget.specialRecommendResult.subTypes.first.goodsItems.items;
-
-    goodsItems.sort((a, b) {
-      return a.price.compareTo(b.price);
-    });
-    return goodsItems.take(3).toList();
+    return widget.specialRecommendResult.subTypes.first.goodsItems.items
+        .take(3)
+        .toList();
   }
 
   Widget _getRow() {
@@ -84,6 +80,12 @@ class _HmSuggestionState extends State<HmSuggestion> {
             borderRadius: BorderRadius.circular(8),
             child: Image.network(
               list[index].picture,
+              errorBuilder: (context, error, stackTrace) {
+                return Image.asset(
+                  "lib/assets/home_cmd_inner.png",
+                  fit: BoxFit.cover,
+                );
+              },
               width: 100,
               height: 140,
               fit: BoxFit.cover,

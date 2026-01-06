@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hm_shop/viewmodels/home.dart';
+import 'package:hm_shop/pojo/home.dart';
 
 class HmCategory extends StatefulWidget {
   final List<CategoryItem> categoryList;
@@ -22,21 +22,30 @@ class _HmCategoryState extends State<HmCategory> {
             alignment: Alignment.center,
             width: 80,
             height: 100,
-            decoration: BoxDecoration(color: Color.fromARGB(255, 231, 232, 234),borderRadius: BorderRadius.circular(40)),
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 231, 232, 234),
+              borderRadius: BorderRadius.circular(40),
+            ),
             margin: EdgeInsets.symmetric(horizontal: 10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.network(
                   widget.categoryList[index].imgUrl,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.asset(
+                      "lib/assets/home_cmd_inner.png",
+                      fit: BoxFit.cover,
+                    );
+                  },
                   width: 40,
                   height: 40,
                   fit: BoxFit.cover,
                 ),
                 Text(
-                   widget.categoryList[index].name,
-                   style: TextStyle(color: Colors.black),
-                )
+                  widget.categoryList[index].name,
+                  style: TextStyle(color: Colors.black),
+                ),
               ],
             ),
           );

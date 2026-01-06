@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hm_shop/viewmodels/home.dart'
+import 'package:hm_shop/pojo/home.dart'
     show SpecialRecommendResult, GoodsItem;
 
 class HmHot extends StatefulWidget {
@@ -71,6 +71,14 @@ class _HmHotState extends State<HmHot> {
             width: 80,
             height: 120,
             fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Image.asset(
+                "lib/assets//home_cmd_inner.png",
+                width: 80,
+                height: 120,
+                fit: BoxFit.cover,
+              );
+            },
           ),
           SizedBox(height: 10),
           Container(

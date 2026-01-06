@@ -6,8 +6,8 @@ import 'package:hm_shop/conponents/home/HmSlider.dart';
 import 'package:hm_shop/conponents/home/HmSuggestion.dart';
 import 'package:hm_shop/constants/index.dart';
 import 'package:hm_shop/utils/dio_request.dart';
-import 'package:hm_shop/viewmodels/home.dart'
-    show CategoryItem, BannerItem, SpecialRecommendResult;
+import 'package:hm_shop/pojo/home.dart'
+    show CategoryItem, BannerItem, SpecialRecommendResult, ShopItem;
 
 class HomeView extends StatefulWidget {
   HomeView({Key? key}) : super(key: key);
@@ -34,6 +34,8 @@ class _HomeViewState extends State<HomeView> {
     title: "",
     subTypes: [],
   );
+  List<ShopItem> _shopList = [];
+
   Future<List<BannerItem>> _getBannerListAPI() async {
     return ((await diorequest.get(
               GlobalConstants.BASE_URL + HttpConstants.BANNER_LIST,
@@ -83,9 +85,23 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
+  Future<List<ShopItem>> _getShopListAPI({required int limit}) async {
+    return (await diorequest.get(
+              GlobalConstants.BASE_URL + HttpConstants.SHOP_LIST,
+              params: {"limit": limit},
+            )
+            as List)
+        .map((item) {
+          return ShopItem.fromJson(item);
+        })
+        .toList();
+  }
+
   @override
   void initState() {
     _loadData();
+    _getShopList();
+    _registerEvent();
     super.initState();
   }
 
@@ -98,9 +114,41 @@ class _HomeViewState extends State<HomeView> {
     setState(() {});
   }
 
+  void _getShopList() async {
+    if (isLoading || !ishasNext) {
+      return;
+    }
+    isLoading = true;
+    int currentLimit = 10 * _page; 
+    _shopList = await _getShopListAPI(limit: currentLimit);
+    isLoading = false;
+    if (_shopList.length < currentLimit) {
+      ishasNext = false;
+      return;
+    }
+     _page++;
+    setState(() {});
+  }
+
+  int _page = 1;
+  bool isLoading = false;
+  bool ishasNext = true;
+  final ScrollController _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(slivers: getScrollChilden());
+    return CustomScrollView(
+      controller: _scrollController,
+      slivers: getScrollChilden(),
+    );
+  }
+
+  void _registerEvent() {
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 50) {
+        _getShopList();
+      }
+    });
   }
 
   List<Widget> getScrollChilden() {
@@ -131,7 +179,7 @@ class _HomeViewState extends State<HomeView> {
         ),
       ),
       SliverToBoxAdapter(child: SizedBox(height: 10)),
-      Hmmorelist(),
+      Hmmorelist(shopList: _shopList),
     ];
   }
 }
